@@ -2,37 +2,42 @@
 	<div>
 		<p>Register</p>
 		<v-form v-model="valid">
-			<text-field v-bind:callback="updateFn"></text-field>
+			<v-text-field v-show="showTextField" ></v-text-field>
+			<v-btn v-if="lastField" @click="submitForm">Submit</v-btn>
+			<v-btn v-else @click="updateField">Next</v-btn>
 		</v-form>
 	</div>
 </template>
 
 <script>
 	import TextField from '../components/TextField.vue'
-	import { updateName, updateEmail, updateUniversity, updateMajor } from '../store/actions'
   export default {
+		components: {
+			TextField
+		},
 		data: {
-			registerItems: ['name', 'email', 'university', 'major'],
+			registerFields: [
+				{ fieldName: 'name', position: 1, fieldType: 'text' },
+				{ fieldName: 'email', position: 2, fieldType: 'text' },
+				{ fieldName: 'university', position: 3, fieldType: 'select'},
+				{ fieldName: 'major', position: 4, fieldType: 'text'}
+			],
 		},
-    components: {
-      TextField
-		},
-		computed: () => {
-			switch(this.$state.currentRegisterItem){
-					case 'name':
-						return {
-							updateFn: this.$
-						};
-				}
+		computed: {
+			lastField: () => {
+				return this.registerFields.filter((item) => item.fieldName === this.$state.currentRegisterField)[0].position === this.registerFields.length
+			},
+			updateField: (value) => {
+				return this.$store.commit('UPDATE_REGISTER_FORM', { fieldName: this.$state.currentRegisterField,  value: value})
+			},
+			showTextField: () => {
+				return this.registerFields.filter((item) => item.fieldType === 'text').includes(this.$state.currentRegisterField)
+			}
 		},
 		methods: {
-			registerItem: () => {
-				switch(this.$state.currentRegisterItem){
-					case 'name':
-						return {
-							
-						}
-				}
+			submitForm: () => {
+				this.$store.commit('UPDATE_REGISTER_FORM', { fieldName: this.$state.currentRegisterField,  value: value})
+				return this.$store.dispatch('SUBMIT_REGISTER_FORM', { fieldName: this.$state.currentRegisterField,  value: value})
 			}
 		}
   }

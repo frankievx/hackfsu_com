@@ -5,7 +5,6 @@ const state = {
     university: '',
     major: ''
   },
-  registerItems: ['name', 'email', 'university', 'major'],
   currentRegisterItem: 'name'
 }
 
